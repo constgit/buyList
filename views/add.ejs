@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Log in</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+    <script>
+        $( document ).ready(function() {
+            $('#s-h-pass').click(function(){
+                var type = $('#password').attr('type') == "text" ? "password" : 'text';
+                var c = $(this).html() == "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>" ? "<span class=\"fa fa-eye input-group-text\" title=\"Показать пароль\"></span>" : "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>";
+                $(this).html(c);
+                $('#password').prop('type', type);
+   
+            });
+        });
+  </script>
+</head>
+
+<body>
+    <div>
+        <% include blocks/header.ejs %>
+    </div>
+    <div style="padding-left: 30px; width:25%"><br>
+        <h1>Add item</h1> <br>
+    </div>
+    <form class="" method="POST">
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <label style=" width:50%">Product name</label><input type="text" name="name" style=" width:50%">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <label style=" width:50%">Product price</label><input style=" width:50%" type="text" name="price">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <label style=" width:50%">Shop</label><input style=" width:50%" type="text" name="shop">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <label style=" width:50%">Comment</label><input style=" width:50%" type="text" name="comment">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <label style=" width:50%">Category</label><input style=" width:50%" type="text" name="category">
+        </div>
+        <div style="padding-left: 30px;">
+            <button type="submit" class="btn btn-info">Add</button>
+        </div>
+    </form>
+</body>
+
+</html>

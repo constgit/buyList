@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Regstration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        $( document ).ready(function() {
+            $('#s-h-pass').click(function(){
+                var type = $('#password').attr('type') == "text" ? "password" : 'text';
+                var c = $(this).html() == "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>" ? "<span class=\"fa fa-eye input-group-text\" title=\"Показать пароль\"></span>" : "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>";
+                $(this).html(c);
+                $('#password').prop('type', type);
+   
+            });
+            $('#s-h-pass2').click(function(){
+                var type = $('#password2').attr('type') == "text" ? "password" : 'text';
+                var c = $(this).html() == "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>" ? "<span class=\"fa fa-eye input-group-text\" title=\"Показать пароль\"></span>" : "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>";
+                $(this).html(c);
+                $('#password2').prop('type', type);
+   
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div>
+    <% include blocks/header.ejs %>
+</div>
+          <% if (message.length > 0) { %>
+    <br>
+   <div style="padding-left: 30px; width:35%" ><div class="alert alert-danger"><%= message %></div></div>
+ <% } %>
+    <div style="padding: 30px; width:35%">
+        <h1>Register form</h1><br>
+    </div>
+    <form class="form-horizontal" action="/register" method="POST">
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <div class="input-group-prepend">
+                <span for="name" class=" fa fa-user input-group-text"></span>
+            </div>
+            <input type="text" class="form-control  " placeholder="Full name" name="name" id="name">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <div class="input-group-prepend">
+                <span for="username" class=" fa fa-user input-group-text"></span>
+            </div>
+            <input type="text" class="form-control  " placeholder="Username" name="username" id="username">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <div class="input-group-prepend">
+                <span for="email" class=" fa fa-envelope input-group-text"></span>
+            </div>
+            <input type="email" class="form-control  " placeholder="Email" name="email" id="email">
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <div class="input-group-prepend">
+                <span for="password" class=" fa fa-key input-group-text"></span>
+            </div>
+            <input type="password" class="form-control  " placeholder="Password" name="password" id="password">
+            <div id="s-h-pass" class="input-group-append">
+                <span class="fa fa-eye input-group-text" title="Показать пароль"></span>
+            </div>
+        </div>
+        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
+            <div class="input-group-prepend">
+                <span for="password" class=" fa fa-key input-group-text"></span>
+            </div>
+            <input type="password" class="form-control  " placeholder="Repeat password" name="password2" id="password2">
+            <div id="s-h-pass2" class="input-group-append"> <span class="fa fa-eye input-group-text" title="Показать пароль"></span>
+            </div>
+        </div>
+        <br>
+        <div style="padding-left: 30px;">
+            <button type="submit" class="btn btn-success">Sign up!</button>
+        </div>
+    </form>
+</body>
+
+</html>

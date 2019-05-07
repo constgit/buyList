@@ -13,25 +13,38 @@
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
+    <script>
+    $(document).ready(function() {
+        $('#s-h-pass').click(function() {
+            var type = $('#password').attr('type') == "text" ? "password" : 'text';
+            var c = $(this).html() == "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>" ? "<span class=\"fa fa-eye input-group-text\" title=\"Показать пароль\"></span>" : "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>";
+            $(this).html(c);
+            $('#password').prop('type', type);
+
+        });
+    });
+    </script>
 </head>
 
 <body>
     <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <div>
-                    <ul class="navbar-nav">
-                        <li><a class="nav-item nav-link" href='/'>Home</a></li>
-                        <li><a class="nav-item nav-link" href='/register'>Register</a></li>
-                        <li><a class="nav-item nav-link" href='/add'>Add Item</a></li>
-                        <li><a class="nav-item nav-link" href='/check'>Check Item</a></li>
-                        <li><a class="nav-item nav-link" href='/login'>Log in</a></li>
-                        <li><a class="nav-item nav-link" href='/logout'>Log out</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <% include blocks/header.ejs %>
     </div>
+    <div style="padding: 30px; width:25%"><br>
+        <h1>Best Buy</h1> <br>
+    </div>
+    <div style="padding: 10px">
+        <h2>We can help you to manage your shopping information. This app will get info about products you bought and it will tell you about the best option - were your products were the cheapest. Just try it!</h2>
+    </div>
+    <div class="row">
+        <div style="padding: 30px" id="addBox" class="col-md-6">
+            <button style="padding: 30px" class="btn btn-info btn-lg" onclick="window.location.href = '/add';"> Add item</button>
+        </div>
+        <div style="padding: 30px" id="checkBox" class="col-md-6">
+            <button style="padding: 30px" class="btn btn-info btn-lg" onclick="window.location.href = '/check';"> Check item</button>
+        </div>
+    </div>
+    <div><p>registered users only</p></div>
 </body>
 
 </html>

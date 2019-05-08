@@ -165,31 +165,31 @@ app.post('/add', function(req, res) {
                 let price = req.body.price;
                 let shop = req.body.shop;
                 let now = new Date();
-                let time='';
-                if (now.getDate()<10)
-                time += ('0'+now.getDate());
+                let time = '';
+                if (now.getDate() < 10)
+                    time += ('0' + now.getDate());
                 else
-                time += now.getDate();
-            	let month=now.getMonth()+1;
-            	if (month<10)
-                time += ('.0'+month);
+                    time += now.getDate();
+                let month = now.getMonth() + 1;
+                if (month < 10)
+                    time += ('.0' + month);
                 else
-                time += ('.'+month);
-            	if (now.getHours()<10)
-                time += (' / 0'+now.getHours());
+                    time += ('.' + month);
+                if (now.getHours() < 10)
+                    time += (' / 0' + now.getHours());
                 else
-                time += (' / '+now.getHours());
-                if (now.getMinutes()<10)
-                time += (':0'+now.getMinutes());
+                    time += (' / ' + now.getHours());
+                if (now.getMinutes() < 10)
+                    time += (':0' + now.getMinutes());
                 else
-                time += (':'+now.getMinutes());         	
+                    time += (':' + now.getMinutes());
 
                 let comment = req.body.comment;
                 let category = req.body.category;
 
 
                 req.checkBody('name', 'Name is required').notEmpty();
-                req.checkBody('price', 'Price is required').isNumeric();
+                req.checkBody('price', 'Price is required').notEmpty();
                 req.checkBody('shop', 'Shop is required').notEmpty();
                 req.checkBody('category', 'Category is required').notEmpty();
 
@@ -230,7 +230,7 @@ app.get('/check', function(req, res) {
         Users.findOne({ username: req.cookies.username }, function(err, users) {
             if (err) throw err;
             if (users != null) {
-                res.render('check');
+                res.render('check', { message: '' });
             } else {
                 res.render('pleaseLogin', { message: 'please log in' });
             }
@@ -245,8 +245,6 @@ app.get('/check', function(req, res) {
 app.post('/check', function(req, res) {
     if (!req.body) return res.sendStatus(400);
     console.log(req.body.keyword);
-
-    if (!req.body) return res.sendStatus(400);
     if (req.cookies.username) {
         Users.findOne({ username: req.cookies.username }, function(err, users) {
             if (err) throw err;
@@ -259,7 +257,7 @@ app.post('/check', function(req, res) {
                 Items.find({ name: regex }, function(err, items) {
                     if (err) throw err;
                     console.log(items);
-                    res.render('searchResult', items);
+                    res.render('searchResult', { items: items });
 
                 });
 
@@ -320,6 +318,90 @@ app.post('/login', function(req, res) {
         }
     });
 });
+
+app.get('/deletePost/:id', function(req, res) {
+    if (!req.body) return res.sendStatus(400);
+    if (req.cookies.username) {
+        Users.findOne({ username: req.cookies.username }, function(err, users) {
+            if (err) throw err;
+            if (users != null) {
+                Items.remove({ _id: req.params.id }, function(err, items) {
+                    if (err) throw err;
+                    if (items != null) {
+                        console.log(items);
+                        res.redirect('/check');
+                    } else {
+                        res.render('check', { message: 'Item not found' });
+                    }
+                });
+            } else {
+                res.render('pleaseLogin', { message: 'please log in' });
+            }
+        });
+    } else {
+        res.render('pleaseLogin', { message: 'please log in' });
+    }
+});
+
+app.get('/editPost/:id', function(req, res) {
+
+    if (!req.body) return res.sendStatus(400);
+    if (req.cookies.username) {
+        Users.findOne({ username: req.cookies.username }, function(err, users) {
+            if (err) throw err;
+            if (users != null) {
+                Items.findOne({ _id: req.params.id }, function(err, items) {
+                    if (err) throw err;
+                    if (items != null) {
+                        console.log(items);
+                        res.render('edit', { items: items });
+                    } else {
+                        res.render('check', { message: 'Item not found' });
+                    }
+                });
+            } else {
+                res.render('pleaseLogin', { message: 'please log in' });
+            }
+        });
+    } else {
+        res.render('pleaseLogin', { message: 'please log in' });
+    }
+});
+app.post('/editPost/:id', function(req, res) {
+    if (!req.body) return res.sendStatus(400);
+    if (req.cookies.username) {
+        Users.findOne({ username: req.cookies.username }, function(err, users) {
+            if (err) throw err;
+            if (users != null) {
+                Items.findOne({ _id: req.params.id }, function(err, items) {
+                    if (err) throw err;
+                    if (items != null) {
+                        console.log(items);
+                        items.name= req.body.name;
+                        items.price= req.body.price;
+                        items.shop= req.body.shop;
+                        items.comment= req.body.comment;
+                        items.category= req.body.category;
+                        items.save(function(err) {
+                        if (err) throw err;
+                        //    console.log('New item successfully added.');
+                       //     console.log(currentItem);
+                        });
+                        res.redirect('/check');
+                    } else {
+                        res.render('check', { message: 'Item not found' });
+                    }
+                });
+            } else {
+                res.render('pleaseLogin', { message: 'please log in' });
+            }
+        });
+    } else {
+        res.render('pleaseLogin', { message: 'please log in' });
+    }
+});
+
+
 app.get('/logout', function(req, res) {
     res.render('logout');
 });

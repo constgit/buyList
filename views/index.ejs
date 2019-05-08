@@ -13,17 +13,6 @@
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
-    <script>
-    $(document).ready(function() {
-        $('#s-h-pass').click(function() {
-            var type = $('#password').attr('type') == "text" ? "password" : 'text';
-            var c = $(this).html() == "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>" ? "<span class=\"fa fa-eye input-group-text\" title=\"Показать пароль\"></span>" : "<span class=\"fa fa-eye-slash input-group-text\" title=\"Скрыть пароль\"></span>";
-            $(this).html(c);
-            $('#password').prop('type', type);
-
-        });
-    });
-    </script>
 </head>
 
 <body>
@@ -33,7 +22,7 @@
     <div style="padding: 30px; width:25%"><br>
         <h1>Best Buy</h1> <br>
     </div>
-    <div style="padding: 10px">
+    <div class="jumbotron">
         <h2>We can help you to manage your shopping information. This app will get info about products you bought and it will tell you about the best option - were your products were the cheapest. Just try it!</h2>
     </div>
     <div class="row">

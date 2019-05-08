@@ -20,26 +20,26 @@
         <% include blocks/header.ejs %>
     </div>
     <div style="padding-left: 30px; width:25%"><br>
-        <h1>Add item</h1> <br>
+        <h1>Edit item</h1> <br>
     </div>
     <form class="" method="POST">
         <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <label style=" width:50%">Product name</label><input type="text" name="name" class="form-control" style=" width:50%">
+            <label style=" width:50%">Product name</label><input type="text" value=<%=items.name %> name="name" >
         </div>
         <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <label style=" width:50%">Product price</label><input style=" width:50%" class="form-control" type="text" name="price">
+            <label style=" width:50%">Product price</label><input value=<%=items.price %> type="text" name="price">
         </div>
         <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <label style=" width:50%">Shop</label><input style=" width:50%" type="text" class="form-control" name="shop">
+            <label style=" width:50%">Shop</label><input value=<%=items.shop %> type="text" name="shop">
         </div>
         <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <label style=" width:50%">Comment</label><input style=" width:50%" type="text" class="form-control" name="comment">
+            <label style=" width:50%">Comment</label><input value=<%=items.comment %> type="text" name="comment">
         </div>
         <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <label style=" width:50%">Category</label><input style=" width:50%" class="form-control" type="text" name="category">
+            <label style=" width:50%">Category</label><input value=<%=items.category %> type="text" name="category">
         </div>
         <div style="padding-left: 30px;">
-            <button type="submit" class="btn btn-info">Add</button>
+            <button type="submit" class="btn btn-info">Edit</button>
         </div>
     </form>
 </body>

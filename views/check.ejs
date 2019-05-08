@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
@@ -20,17 +21,16 @@
         <% include blocks/header.ejs %>
     </div>
     <div style="padding-left: 30px; width:25%"><br>
-        <h1>Check item</h1> <br>
+        <h1>Check Item</h1> <br>
     </div>
     <form name="searchRequest" method="POST">
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <label style=" width:50%">I`m looking for</label><input type="text" name="keyword" style=" width:50%">
-        </div>
-        <div style="padding-left: 30px;">
-            <button id="search" type="submit" class="btn btn-info">Search</button>
+        <div style="padding-left: 30px; width:60%" class="row">
+            <div class="col-md-3"><label>I`m looking for</label></div>
+            <div class="col-md-4"><input class="form-control" type="text" name="keyword"></div>
+            <div class="col-md-3"><button id="search" type="submit" class="btn btn-info">Search</button></div>
         </div>
     </form>
+   
 </body>
-
 
 </html>

@@ -45,17 +45,23 @@ app.use(flash());
 app.use(require('cookie-parser')('myServerSecret54'));
 
 var cookieOptions = {
-    maxAge: 120000000,
+    maxAge: 600000,
     secure: true,
     signed: true
 };
 var MongoStore = require('connect-mongo')(session);
+app.use(session({
+    secret: 'myServerSecret55',
+    //store: store,
+    cookie: { maxAge: 600000 },
+    store: new MongoStore({ url: 'mongodb://localhost:27017/session' })
+}));
 
 
 
 app.get('/', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.render('index', { authorised: true });
         } else {
             res.render('index', { authorised: false });
@@ -64,7 +70,7 @@ app.get('/', function(req, res) {
 });
 app.post('/', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.render('index', { authorised: true });
         } else {
             res.render('index', { authorised: false });
@@ -74,7 +80,7 @@ app.post('/', function(req, res) {
 
 app.get('/register', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.render('register', { message: 'you are already registered', authorised: true });
         } else {
             res.render('register', { message: '', authorised: false });
@@ -85,7 +91,7 @@ app.get('/register', function(req, res) {
 app.post('/register', function(req, res) {
     if (!req.body) return res.sendStatus(400);
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.render('register', { message: 'you are already registered', authorised: true });
         } else {
             var name = req.body.name;
@@ -163,7 +169,7 @@ app.get('/add', function(req, res) {
     if (!req.body) return res.sendStatus(400);
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.render('add', { authorised: true });
         } else {
             res.render('pleaseLogin', { message: 'please log in', authorised: false });
@@ -174,7 +180,7 @@ app.post('/add', function(req, res) {
     if (!req.body) return res.sendStatus(400);
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
-        if (users != null) {
+        if (users != null && req.session.username) {
             let name = req.body.name;
             let price = req.body.price;
             let shop = req.body.shop;
@@ -227,7 +233,7 @@ app.get('/check', function(req, res) {
     if (!req.body) return res.sendStatus(400);
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.render('check', { message: '', authorised: true });
         } else {
             res.render('pleaseLogin', { message: 'please log in', authorised: false });
@@ -237,15 +243,12 @@ app.get('/check', function(req, res) {
 
 app.post('/check', function(req, res) {
     if (!req.body) return res.sendStatus(400);
-    console.log(req.body.keyword);
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
-        if (users != null) {
-            console.log(users);
+        if (users != null && req.session.username) {
             let regex = new RegExp(req.body.keyword, 'i');
             Items.find({ name: regex }, function(err, items) {
                 if (err) throw err;
-                console.log(items);
                 res.render('searchResult', { items: items, authorised: true });
             });
         } else {
@@ -256,7 +259,7 @@ app.post('/check', function(req, res) {
 app.get('/login', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
-        if (users != null) {
+        if (users != null && req.session.username) {
             res.redirect('/');
         } else {
             res.render('login', { message: '', authorised: false });
@@ -269,6 +272,7 @@ app.post('/login', function(req, res) {
         if (users != null) {
             var a = bcrypt.compareSync(req.body.password, users.password);
             if (a && users.confirmation == true) {
+                req.session.username = users.username;
                 res.cookie('username', users.username, cookieOptions);
                 res.redirect('/');
             } else if (users.confirmation == true) {
@@ -289,7 +293,7 @@ app.get('/deletePost/:id', function(req, res) {
         if (!req.body) return res.sendStatus(400);
         Users.findOne({ username: req.signedCookies.username }, function(err, users) {
             if (err) throw err;
-            if (users != null) {
+            if (users != null && req.session.username) {
                 Items.remove({ _id: req.params.id }, function(err, items) {
                     if (err) throw err;
                     if (items != null) {
@@ -313,7 +317,7 @@ app.get('/editPost/:id', function(req, res) {
         if (!req.body) return res.sendStatus(400);
         Users.findOne({ username: req.signedCookies.username }, function(err, users) {
             if (err) throw err;
-            if (users != null) {
+            if (users != null && req.session.username) {
                 Items.findOne({ _id: req.params.id }, function(err, items) {
                     if (err) throw err;
                     if (items != null) {
@@ -336,7 +340,7 @@ app.post('/editPost/:id', function(req, res) {
         if (!req.body) return res.sendStatus(400);
         Users.findOne({ username: req.signedCookies.username }, function(err, users) {
             if (err) throw err;
-            if (users != null) {
+            if (users != null && req.session.username) {
                 Items.findById({ _id: req.params.id }, function(err, items) {
                     if (err) throw err;
                     if (items != null) {
@@ -363,7 +367,12 @@ app.post('/editPost/:id', function(req, res) {
 
 
 app.get('/logout', function(req, res) {
-	res.clearCookie('username');
+    res.clearCookie('username');
+    req.session.destroy((err) => {
+        if (err) {
+            return console.log(err);
+        }
+    });
     res.redirect('/');
 });
 

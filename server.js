@@ -35,8 +35,8 @@ db.once('open', function() {
 });
 app.use(cookieParser());
 app.use(expressValidator());
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use('/public', express.static('public'));
+app.use(favicon(path.join(__dirname, 'src/img', 'favicon.ico')));
+
 app.use('/src', express.static('src'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -136,6 +136,9 @@ app.get('/regConfirm/:id', function(req, res) {
                 res.end('403: Uncorrect link');
             }
         });
+
+    } else {
+        res.render('404');
     }
 });
 app.get('/add', function(req, res) {
@@ -320,88 +323,109 @@ app.post('/login', function(req, res) {
 });
 
 app.get('/deletePost/:id', function(req, res) {
-    if (!req.body) return res.sendStatus(400);
-    if (req.cookies.username) {
-        Users.findOne({ username: req.cookies.username }, function(err, users) {
-            if (err) throw err;
-            if (users != null) {
-                Items.remove({ _id: req.params.id }, function(err, items) {
-                    if (err) throw err;
-                    if (items != null) {
-                        console.log(items);
-                        res.redirect('/check');
-                    } else {
-                        res.render('check', { message: 'Item not found' });
-                    }
-                });
-            } else {
-                res.render('pleaseLogin', { message: 'please log in' });
-            }
-        });
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        if (!req.body) return res.sendStatus(400);
+        if (req.cookies.username) {
+            Users.findOne({ username: req.cookies.username }, function(err, users) {
+                if (err) throw err;
+                if (users != null) {
+                    Items.remove({ _id: req.params.id }, function(err, items) {
+                        if (err) throw err;
+                        if (items != null) {
+                            console.log(items);
+                            res.redirect('/check');
+                        } else {
+                            res.render('check', { message: 'Item not found' });
+                        }
+                    });
+                } else {
+                    res.render('pleaseLogin', { message: 'please log in' });
+                }
+            });
+        } else {
+            res.render('pleaseLogin', { message: 'please log in' });
+        }
     } else {
-        res.render('pleaseLogin', { message: 'please log in' });
+        res.render('404');
     }
 });
 
 app.get('/editPost/:id', function(req, res) {
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        if (!req.body) return res.sendStatus(400);
+        if (req.cookies.username) {
+            Users.findOne({ username: req.cookies.username }, function(err, users) {
+                if (err) throw err;
+                if (users != null) {
+                    Items.findOne({ _id: req.params.id }, function(err, items) {
+                        if (err) throw err;
+                        if (items != null) {
+                            console.log(items);
+                            res.render('edit', { items: items });
+                        } else {
+                            res.render('check', { message: 'Item not found' });
+                        }
+                    });
+                } else {
+                    res.render('pleaseLogin', { message: 'please log in' });
+                }
+            });
+        } else {
+            res.render('pleaseLogin', { message: 'please log in' });
+        }
 
-    if (!req.body) return res.sendStatus(400);
-    if (req.cookies.username) {
-        Users.findOne({ username: req.cookies.username }, function(err, users) {
-            if (err) throw err;
-            if (users != null) {
-                Items.findOne({ _id: req.params.id }, function(err, items) {
-                    if (err) throw err;
-                    if (items != null) {
-                        console.log(items);
-                        res.render('edit', { items: items });
-                    } else {
-                        res.render('check', { message: 'Item not found' });
-                    }
-                });
-            } else {
-                res.render('pleaseLogin', { message: 'please log in' });
-            }
-        });
     } else {
-        res.render('pleaseLogin', { message: 'please log in' });
+        res.render('404');
     }
 });
 app.post('/editPost/:id', function(req, res) {
-    if (!req.body) return res.sendStatus(400);
-    if (req.cookies.username) {
-        Users.findOne({ username: req.cookies.username }, function(err, users) {
-            if (err) throw err;
-            if (users != null) {
-                Items.findOne({ _id: req.params.id }, function(err, items) {
-                    if (err) throw err;
-                    if (items != null) {
-                        console.log(items);
-                        items.name= req.body.name;
-                        items.price= req.body.price;
-                        items.shop= req.body.shop;
-                        items.comment= req.body.comment;
-                        items.category= req.body.category;
-                        items.save(function(err) {
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+
+
+        if (!req.body) return res.sendStatus(400);
+        if (req.cookies.username) {
+            Users.findOne({ username: req.cookies.username }, function(err, users) {
+                if (err) throw err;
+                if (users != null) {
+
+                    Items.findById({ _id: req.params.id }, function(err, items) {
                         if (err) throw err;
-                        //    console.log('New item successfully added.');
-                       //     console.log(currentItem);
-                        });
-                        res.redirect('/check');
-                    } else {
-                        res.render('check', { message: 'Item not found' });
-                    }
-                });
-            } else {
-                res.render('pleaseLogin', { message: 'please log in' });
-            }
-        });
+                        if (items != null) {
+                            console.log(items);
+                            items.name = req.body.name;
+                            items.price = req.body.price;
+                            items.shop = req.body.shop;
+                            items.comment = req.body.comment;
+                            items.category = req.body.category;
+                            items.save(function(err) {
+                                if (err) throw err;
+                                //    console.log('New item successfully added.');
+                                //     console.log(currentItem);
+                            });
+                            res.redirect('/check');
+                        } else {
+                            res.render('check', { message: 'Item not found' });
+                        }
+                    });
+                } else {
+                    res.render('pleaseLogin', { message: 'please log in' });
+                }
+            });
+        } else {
+            res.render('pleaseLogin', { message: 'please log in' });
+        }
+
     } else {
-        res.render('pleaseLogin', { message: 'please log in' });
+        res.render('404');
     }
 });
 
 
 app.get('/logout', function(req, res) {
     res.render('logout');
+});
+
+
+app.get('*', function(req, res) {
+    res.render('404');
 });

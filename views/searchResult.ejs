@@ -74,7 +74,23 @@
 
 <body>
     <div>
-        <% include blocks/header.ejs %>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <div>
+                    <ul class="navbar-nav">
+                        <li><a class="nav-item nav-link" href='/'>Home</a></li>
+                        <li><a class="nav-item nav-link" href='/add'>Add Item</a></li>
+                        <li><a class="nav-item nav-link" href='/check'>Check Item</a></li>
+                        <% if (authorised) {%>
+                        <li><a class="nav-item nav-link" href='/logout'>Log out</a></li>
+                        <% } else { %>
+                        <li><a class="nav-item nav-link" href='/login'>Log in</a></li>
+                        <li><a class="nav-item nav-link" href='/register'>Register</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
     <div style="padding-left: 30px; width:25%"><br>
         <h1>Check Item</h1> <br>

@@ -6,8 +6,11 @@
                         <li><a class="nav-item nav-link" href='/register'>Register</a></li>
                         <li><a class="nav-item nav-link" href='/add'>Add Item</a></li>
                         <li><a class="nav-item nav-link" href='/check'>Check Item</a></li>
+                        <% if (authorized) {%>
                         <li><a class="nav-item nav-link" href='/login'>Log in</a></li>
+                        <% } else { %>
                         <li><a class="nav-item nav-link" href='/logout'>Log out</a></li>
+                        <% } %>
                     </ul>
                 </div>
             </div>

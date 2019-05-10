@@ -62,18 +62,18 @@ app.use(session({
 app.get('/', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (users != null && req.session.username) {
-            res.render('index', { authorised: true });
+            res.render('index');
         } else {
-            res.render('index', { authorised: false });
+            res.render('index');
         }
     });
 });
 app.post('/', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (users != null && req.session.username) {
-            res.render('index', { authorised: true });
+            res.render('index');
         } else {
-            res.render('index', { authorised: false });
+            res.render('index');
         }
     });
 });
@@ -81,9 +81,9 @@ app.post('/', function(req, res) {
 app.get('/register', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (users != null && req.session.username) {
-            res.render('register', { message: 'you are already registered', authorised: true });
+            res.render('register', { message: 'you are already registered' });
         } else {
-            res.render('register', { message: '', authorised: false });
+            res.render('register', { message: ''});
         }
     });
 
@@ -170,9 +170,9 @@ app.get('/add', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
         if (users != null && req.session.username) {
-            res.render('add', { authorised: true });
+            res.render('add');
         } else {
-            res.render('pleaseLogin', { message: 'please log in', authorised: false });
+            res.render('pleaseLogin', { message: 'please log in'});
         }
     });
 });
@@ -234,9 +234,9 @@ app.get('/check', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
         if (users != null && req.session.username) {
-            res.render('check', { message: '', authorised: true });
+            res.render('check', { message: '' });
         } else {
-            res.render('pleaseLogin', { message: 'please log in', authorised: false });
+            res.render('pleaseLogin', { message: 'please log in' });
         }
     });
 });
@@ -249,10 +249,27 @@ app.post('/check', function(req, res) {
             let regex = new RegExp(req.body.keyword, 'i');
             Items.find({ name: regex }, function(err, items) {
                 if (err) throw err;
-                res.render('searchResult', { items: items, authorised: true });
+                res.send(items);
             });
         } else {
-            res.render('searchResult', { message: ['nothing to show'], authorised: true });
+            res.render('searchResult', { message: ['nothing to show']});
+        }
+    });
+});
+app.get('/checking/:id', function(req, res) {
+    if (!req.body) return res.sendStatus(400);
+    Users.findOne({ username: req.signedCookies.username }, function(err, users) {
+        if (err) throw err;
+        if (users != null && req.session.username) {
+            let regex = new RegExp(req.params.id, 'i');
+            Items.find({ name: regex }, function(err, items) {
+                if (err) throw err;
+                console.log(items);
+                res.send(items);
+
+            });
+        } else {
+            res.render('searchResult', { message: ['nothing to show']});
         }
     });
 });
@@ -262,7 +279,7 @@ app.get('/login', function(req, res) {
         if (users != null && req.session.username) {
             res.redirect('/');
         } else {
-            res.render('login', { message: '', authorised: false });
+            res.render('login', { message: '' });
         }
     });
 });
@@ -278,12 +295,12 @@ app.post('/login', function(req, res) {
             } else if (users.confirmation == true) {
                 //res.status(403);
                 //res.send('Uncorrect password');
-                res.render('login', { message: 'Uncorrect password', authorised: false });
+                res.render('login', { message: 'Uncorrect password' });
             } else {
-                res.render('login', { message: 'Your email is not confirmed yet', authorised: false });
+                res.render('login', { message: 'Your email is not confirmed yet'});
             }
         } else {
-            res.render('login', { message: 'This login is not registered yet', authorised: false });
+            res.render('login', { message: 'This login is not registered yet'});
         }
     });
 });
@@ -300,11 +317,11 @@ app.get('/deletePost/:id', function(req, res) {
                         console.log(items);
                         res.redirect('/check');
                     } else {
-                        res.render('check', { message: 'Item not found', authorised: true });
+                        res.render('check', { message: 'Item not found' });
                     }
                 });
             } else {
-                res.render('pleaseLogin', { message: 'please log in', authorised: false });
+                res.render('pleaseLogin', { message: 'please log in' });
             }
         });
     } else {
@@ -322,13 +339,13 @@ app.get('/editPost/:id', function(req, res) {
                     if (err) throw err;
                     if (items != null) {
                         console.log(items);
-                        res.render('edit', { items: items, authorised: true });
+                        res.render('edit', { items: items });
                     } else {
-                        res.render('check', { message: 'Item not found', authorised: true });
+                        res.render('check', { message: 'Item not found' });
                     }
                 });
             } else {
-                res.render('pleaseLogin', { message: 'please log in', authorised: false });
+                res.render('pleaseLogin', { message: 'please log in' });
             }
         });
     } else {
@@ -353,11 +370,11 @@ app.post('/editPost/:id', function(req, res) {
                         items.save(function(err) { if (err) throw err; });
                         res.redirect('/check');
                     } else {
-                        res.render('check', { message: 'Item not found', authorised: true });
+                        res.render('check', { message: 'Item not found' });
                     }
                 });
             } else {
-                res.render('pleaseLogin', { message: 'please log in', authorised: false });
+                res.render('pleaseLogin', { message: 'please log in' });
             }
         });
     } else {
@@ -376,7 +393,18 @@ app.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
-
+app.get('/jquery', function(req, res) {
+    res.render('jquery');
+});
+app.get('/auth', function(req, res) {
+    Users.findOne({ username: req.signedCookies.username }, function(err, users) {
+        if (users != null && req.session.username) {
+            res.send({ username: req.signedCookies.username });
+        } else {
+            res.send({ username: 'guest' });
+        }
+    });
+});
 app.get('*', function(req, res) {
     res.render('404');
 });

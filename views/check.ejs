@@ -26,7 +26,7 @@
                 $('#header').html("<li><a class='nav-item nav-link' href='/'>Home</a></li><li><a class='nav-item nav-link' href='/register'>Register</a></li> <li> <a class='nav-item nav-link' href='/login'>Sign in <i class='fa fa-sign-in'></i></a></li>");
         });
         $("#keyword").keyup(function() {
-            var input = 'checking/' + $(this).val();
+            var input = 'checking?keyword=' + $(this).val();
             $.get(input, function(data) {
                 $('#searchResult').html('');
                 var i = 1;

@@ -27,6 +27,7 @@ mongoose.connect('mongodb://localhost:27017/buyList');
 let db = mongoose.connection;
 let Users = require('./models/users');
 let Items = require('./models/items');
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
     console.log('Connected to MongoDB');
@@ -81,9 +82,9 @@ app.post('/', function(req, res) {
 app.get('/register', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (users != null && req.session.username) {
-            res.render('register', { message: 'you are already registered' });
+            res.render('register');
         } else {
-            res.render('register', { message: ''});
+            res.render('register');
         }
     });
 
@@ -112,7 +113,7 @@ app.post('/register', function(req, res) {
                         if (users[0] === undefined) {
                             let errors = req.validationErrors();
                             if (errors) {
-                                res.render('register', { errors: errors });
+                                res.render('register');
                             } else {
                                 var newUser = new Users({
                                     _id: new mongoose.Types.ObjectId(),
@@ -136,10 +137,10 @@ app.post('/register', function(req, res) {
                                 res.end('Confirmation letter sent on your email');
                             }
                         } else
-                            res.render('register', { message: 'User with this email already registered' });
+                            res.render('register');
                     });
                 } else {
-                    res.render('register', { message: 'User with this login already registered' });
+                    res.render('register');
                 }
             });
         }
@@ -172,7 +173,7 @@ app.get('/add', function(req, res) {
         if (users != null && req.session.username) {
             res.render('add');
         } else {
-            res.render('pleaseLogin', { message: 'please log in'});
+            res.render('pleaseLogin');
         }
     });
 });
@@ -234,9 +235,9 @@ app.get('/check', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
         if (err) throw err;
         if (users != null && req.session.username) {
-            res.render('check', { message: '' });
+            res.render('check');
         } else {
-            res.render('pleaseLogin', { message: 'please log in' });
+            res.render('pleaseLogin');
         }
     });
 });
@@ -252,26 +253,44 @@ app.post('/check', function(req, res) {
                 res.send(items);
             });
         } else {
-            res.render('searchResult', { message: ['nothing to show']});
+            res.render('searchResult');
         }
     });
 });
-app.get('/checking/:id', function(req, res) {
-    if (!req.body) return res.sendStatus(400);
-    Users.findOne({ username: req.signedCookies.username }, function(err, users) {
-        if (err) throw err;
-        if (users != null && req.session.username) {
-            let regex = new RegExp(req.params.id, 'i');
-            Items.find({ name: regex }, function(err, items) {
-                if (err) throw err;
-                console.log(items);
-                res.send(items);
 
-            });
-        } else {
-            res.render('searchResult', { message: ['nothing to show']});
-        }
-    });
+app.get('/checking', function(req, res) {
+    if (req.query.username)
+        Users.findOne({ username: req.query.username }, function(err, users) {
+            if (users != null) res.send({ username: true });
+            else res.send({ username: false });
+        });
+    if (req.query.email)
+        Users.findOne({ email: req.query.email }, function(err, users) {
+            if (users != null) res.send({ email: true });
+            else res.send({ email: false });
+        });
+    if (req.query.keyword) {
+        Users.findOne({ username: req.signedCookies.username }, function(err, users) {
+            if (err) throw err;
+            if (users != null && req.session.username) {
+
+
+                let regex = new RegExp(req.query.keyword, 'i');
+                Items.find({ name: regex }, function(err, items) {
+                    if (err) throw err;
+                    console.log(items);
+                    res.send(items);
+                });
+
+            } else {
+                res.render('login');
+            }
+        });
+    }
+
+
+
+
 });
 app.get('/login', function(req, res) {
     Users.findOne({ username: req.signedCookies.username }, function(err, users) {
@@ -279,9 +298,10 @@ app.get('/login', function(req, res) {
         if (users != null && req.session.username) {
             res.redirect('/');
         } else {
-            res.render('login', { message: '' });
+            res.render('login');
         }
     });
+
 });
 app.post('/login', function(req, res) {
     Users.findOne({ username: req.body.username }, function(err, users) {
@@ -295,12 +315,12 @@ app.post('/login', function(req, res) {
             } else if (users.confirmation == true) {
                 //res.status(403);
                 //res.send('Uncorrect password');
-                res.render('login', { message: 'Uncorrect password' });
+                res.render('login');
             } else {
-                res.render('login', { message: 'Your email is not confirmed yet'});
+                res.render('login');
             }
         } else {
-            res.render('login', { message: 'This login is not registered yet'});
+            res.render('login');
         }
     });
 });
@@ -317,11 +337,11 @@ app.get('/deletePost/:id', function(req, res) {
                         console.log(items);
                         res.redirect('/check');
                     } else {
-                        res.render('check', { message: 'Item not found' });
+                        res.render('check');
                     }
                 });
             } else {
-                res.render('pleaseLogin', { message: 'please log in' });
+                res.render('pleaseLogin');
             }
         });
     } else {
@@ -341,11 +361,11 @@ app.get('/editPost/:id', function(req, res) {
                         console.log(items);
                         res.render('edit', { items: items });
                     } else {
-                        res.render('check', { message: 'Item not found' });
+                        res.render('check');
                     }
                 });
             } else {
-                res.render('pleaseLogin', { message: 'please log in' });
+                res.render('pleaseLogin');
             }
         });
     } else {
@@ -370,11 +390,11 @@ app.post('/editPost/:id', function(req, res) {
                         items.save(function(err) { if (err) throw err; });
                         res.redirect('/check');
                     } else {
-                        res.render('check', { message: 'Item not found' });
+                        res.render('check');
                     }
                 });
             } else {
-                res.render('pleaseLogin', { message: 'please log in' });
+                res.render('pleaseLogin');
             }
         });
     } else {
@@ -405,6 +425,8 @@ app.get('/auth', function(req, res) {
         }
     });
 });
+
+
 app.get('*', function(req, res) {
     res.render('404');
 });

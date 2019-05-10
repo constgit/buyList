@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
-    $(document).ready(function() {
+        $(document).ready(function() {
         $.get('auth', function(data) {
             if (data.username != 'guest')
                 $('#header').html("<li><a class='nav-item nav-link' href='/'>Home</a></li><li><a class='nav-item nav-link' href='/add'>Add Item</a></li><li><a class='nav-item nav-link' href='/check'>Check Item</a></li><li><a class='nav-item nav-link' href='/logout'>Sign out <i class='fa fa-sign-out'></i></a></li>");
@@ -32,6 +32,35 @@
             $('#password2').prop('type', type);
 
         });
+        $("#username").keyup(function() {
+            var input = 'checking?username=' + $(this).val();
+            $.get(input, function(data) {
+                console.log(data.username);
+                if(data.username==true)
+                $('#message').html('<div style="margin-left:30px;margin-top:55px; text-align: center; width:35%; background-color: #ff9999;height:37px; border-radius:5px;border-color: red;border-style: solid;border-width: 1px; display: inline-block;"><p style="  display: inline-block; vertical-align: middle;text-align: center;">This username exists</p></div>');
+                  else
+                    $('#message').html('');
+            });
+        });
+        $("#email").keyup(function() {
+            var input = 'checking?email=' + $(this).val();
+            $.get(input, function(data) {
+                console.log(data.email);
+                if(data.email==true)
+                $('#message').html('<div style="margin-left:30px; margin-top:110px;text-align: center; width:35%; background-color: #ff9999;height:37px; border-radius:5px;border-color: red;border-style: solid;border-width: 1px; display: inline-block;"><p style="  display: inline-block; vertical-align: middle;text-align: center;">This email is already registered</p></div>');
+                  else
+                    $('#message').html('');
+            });
+        });
+        $("#password2").keyup(function() {
+            var password1 = $("#password").val();
+            var password2 = $(this).val();
+            if(password1!=password2)
+                $('#message').html('<div style="margin-left:30px; margin-top:217px;text-align: center; width:35%; background-color: #ff9999;height:37px; border-radius:5px;border-color: red;border-style: solid;border-width: 1px; display: inline-block;"><p style="  display: inline-block; vertical-align: middle;text-align: center;">Passwords are different</p></div>');
+            else
+                $('#message').html('');
+
+        });
     });
     </script>
 </head>
@@ -44,52 +73,49 @@
             </div>
         </nav>
     </div>
-    <% if (message.length > 0) { %>
-    <br>
-    <div style="padding-left: 30px; width:35%">
-        <div class="alert alert-danger">
-            <%= message %>
-        </div>
-    </div>
-    <% } %>
     <div style="padding: 30px; width:35%">
         <h1>Register form</h1><br>
     </div>
     <form class="form-horizontal" action="/register" method="POST">
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="name" class=" fa fa-user input-group-text"></span>
+        <div class="row">
+            <div style="padding-left: 50px; width:40%">
+                <div class="input-group mb-3 form-group ">
+                    <div class="input-group-prepend">
+                        <span for="name" class=" fa fa-user input-group-text"></span>
+                    </div>
+                    <input type="text" class="form-control  " placeholder="Full name" name="name" id="name">
+                </div>
+                <div class="input-group mb-3 form-group " >
+                    <div class="input-group-prepend">
+                        <span for="username" class=" fa fa-user input-group-text"></span>
+                    </div>
+                    <input type="text" class="form-control  " placeholder="Username" name="username" id="username">
+                </div>
+                <div class="input-group mb-3 form-group " >
+                    <div class="input-group-prepend">
+                        <span for="email" class=" fa fa-envelope input-group-text"></span>
+                    </div>
+                    <input type="email" class="form-control  " placeholder="Email" name="email" id="email">
+                </div>
+                <div class="input-group mb-3 form-group " >
+                    <div class="input-group-prepend">
+                        <span for="password" class=" fa fa-key input-group-text"></span>
+                    </div>
+                    <input type="password" class="form-control  " placeholder="Password" name="password" id="password">
+                    <div id="s-h-pass" class="input-group-append">
+                        <span class="fa fa-eye input-group-text" title="Показать пароль"></span>
+                    </div>
+                </div>
+                <div class="input-group mb-3 form-group " >
+                    <div class="input-group-prepend">
+                        <span for="password" class=" fa fa-key input-group-text"></span>
+                    </div>
+                    <input type="password" class="form-control  " placeholder="Repeat password" name="password2" id="password2">
+                    <div id="s-h-pass2" class="input-group-append"> <span class="fa fa-eye input-group-text" title="Показать пароль"></span>
+                    </div>
+                </div>
             </div>
-            <input type="text" class="form-control  " placeholder="Full name" name="name" id="name">
-        </div>
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="username" class=" fa fa-user input-group-text"></span>
-            </div>
-            <input type="text" class="form-control  " placeholder="Username" name="username" id="username">
-        </div>
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="email" class=" fa fa-envelope input-group-text"></span>
-            </div>
-            <input type="email" class="form-control  " placeholder="Email" name="email" id="email">
-        </div>
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="password" class=" fa fa-key input-group-text"></span>
-            </div>
-            <input type="password" class="form-control  " placeholder="Password" name="password" id="password">
-            <div id="s-h-pass" class="input-group-append">
-                <span class="fa fa-eye input-group-text" title="Показать пароль"></span>
-            </div>
-        </div>
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="password" class=" fa fa-key input-group-text"></span>
-            </div>
-            <input type="password" class="form-control  " placeholder="Repeat password" name="password2" id="password2">
-            <div id="s-h-pass2" class="input-group-append"> <span class="fa fa-eye input-group-text" title="Показать пароль"></span>
-            </div>
+            <div id="message" style="width:60%"></div>
         </div>
         <br>
         <div style="padding-left: 30px;">

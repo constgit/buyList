@@ -13,7 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
     <script>
-    $(document).ready(function() {
+        $(document).ready(function() {
         $.get('auth', function(data) {
             if (data.username != 'guest')
                 $('#header').html("<li><a class='nav-item nav-link' href='/'>Home</a></li><li><a class='nav-item nav-link' href='/add'>Add Item</a></li><li><a class='nav-item nav-link' href='/check'>Check Item</a></li><li><a class='nav-item nav-link' href='/logout'>Sign out <i class='fa fa-sign-out'></i></a></li>");
@@ -27,6 +27,17 @@
             $('#password').prop('type', type);
 
         });
+        $("#username").keyup(function() {
+            var input = 'checking?username=' + $(this).val();
+            $.get(input, function(data) {
+                console.log(data.username);
+                if(data.username==false)
+                $('#message').html('<div style="margin-left:30px; text-align: center; width:35%; background-color: #ff9999;height:37px; border-radius:5px;border-color: red;border-style: solid;border-width: 1px; display: inline-block;"><p style="  display: inline-block; vertical-align: middle;text-align: center;">Uncorrect username</p></div>');
+                  else
+                    $('#message').html('');
+            });
+        });
+
     });
     </script>
 </head>
@@ -39,41 +50,39 @@
             </div>
         </nav>
     </div>
-    <% if (message && message.length > 0) { %>
-    <br>
-    <div style="padding-left: 30px; width:35%">
-        <div class="alert alert-danger">
-            <%= message %>
-        </div>
-    </div>
-    <% } %>
     <div style="padding-left: 30px; width:25%"><br>
-        <h1>Log in</h1> <br>
+        <h1>Sign in</h1> <br>
     </div>
     <form class="" method="POST">
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="username" class=" fa fa-user input-group-text"></span>
+        <div class="row">
+            <div style="padding-left: 30px; width:30%">
+                <div class="input-group mb-3 form-group " style="padding-left: 30px">
+                    <div class="input-group-prepend">
+                        <span for="username" class=" fa fa-user input-group-text"></span>
+                    </div>
+                    <input type="text" class="form-control  " placeholder="Username" name="username" id="username">
+                </div>
+                <div class="input-group mb-3 form-group " style="padding-left: 30px">
+                    <div class="input-group-prepend">
+                        <span for="password" class=" fa fa-key input-group-text"></span>
+                    </div>
+                    <input type="password" class="form-control  " placeholder="Password" name="password" id="password">
+                    <div id="s-h-pass" class="input-group-append">
+                        <span class="fa fa-eye input-group-text" title="Show password"></span>
+                    </div>
+                </div>
+                <div class="checkbox" style="padding-left: 30px; ">
+                    <label><input type="checkbox"> Remember me</label>
+                </div>
+                <div style="padding-left: 30px; ">
+                    <p>Not registered yet? <a class="link" href="/register"> Sign up now!</a></p>
+                </div>
+                <div style="padding-left: 30px;">
+                    <button type="submit" class="btn btn-info">Sign in</button>
+                </div>
             </div>
-            <input type="text" class="form-control  " placeholder="Username" name="username" id="username">
-        </div>
-        <div class="input-group mb-3 form-group " style="padding-left: 30px; width:35%">
-            <div class="input-group-prepend">
-                <span for="password" class=" fa fa-key input-group-text"></span>
+            <div id="message" style="width:50%">
             </div>
-            <input type="password" class="form-control  " placeholder="Password" name="password" id="password">
-            <div id="s-h-pass" class="input-group-append">
-                <span class="fa fa-eye input-group-text" title="Show password"></span>
-            </div>
-        </div>
-        <div class="checkbox" style="padding-left: 30px; ">
-            <label><input type="checkbox"> Remember me</label>
-        </div>
-        <div style="padding-left: 30px; ">
-            <p>Not registered yet? <a class="link" href="/register"> Sign up now!</a></p>
-        </div>
-        <div style="padding-left: 30px;">
-            <button type="submit" class="btn btn-info">Log in</button>
         </div>
     </form>
 </body>
